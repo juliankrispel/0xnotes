@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { createEditor, Node } from "slate";
 import { withHistory } from "slate-history";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
@@ -10,7 +10,7 @@ import { EditableProps } from "slate-react/dist/components/editable";
 import { useLocalStorage } from 'react-use';
 import { SlateProps } from "../types/shared";
 import { autocompletePlugin } from "../plugins/autocomplete/autocomplete";
-import { Box, Container, Typography, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { core } from "../plugins/core/core";
 import { ZeroXEditor } from "../types";
 
@@ -67,17 +67,26 @@ export function ZeroXNotes()  {
   const theme = useTheme()
 
   return (
-    <Container
+    <Box
       sx={{
         height: "100vh",
-        overflow: 'auto',
-        padding: theme.spacing(4),
+        width: '100%',
+        overflow: "auto",
+        '[role="textbox"]': {
+          width: '100%',
+          height: "100%",
+          padding: theme.spacing(4),
+        },
       }}
     >
       <Slate editor={editor} onChange={setValue} value={value}>
-        <Editable autoFocus {...editableProps} />
+        <Editable
+          autoFocus
+          {...editableProps}
+          placeholder="Type @ for pills and / for blocks"
+        />
         <Outside />
       </Slate>
-    </Container>
+    </Box>
   );
 }

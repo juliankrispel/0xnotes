@@ -27,6 +27,8 @@ export const core: SlateComposable<SlateProps> = (pluginProps, editor: ZeroXEdit
             <Typography
               variant="body1"
               style={{
+                maxWidth: `${theme.spacing(70)}`,
+                margin: 'auto',
                 lineHeight: theme.typography.subtitle1.lineHeight,
               }}
               {...props.attributes}
