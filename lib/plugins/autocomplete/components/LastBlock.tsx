@@ -16,17 +16,21 @@ export function LastBlock() {
             number,
             difficulty,
             baseFeePerGas,
+            extraData,
+            transactions,
           } = val
           setValue({
             gasLimit,
-            timestamp,
+            timestamp: new Date(timestamp),
             gasUsed,
             hash,
             number,
             difficulty,
+            extraData,
             baseFeePerGas,
+            numberOfTransactions: transactions.length,
           })
-          setValue(val);
+          // setValue(val);
         });
       });
     }

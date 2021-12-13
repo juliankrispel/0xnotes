@@ -73,7 +73,7 @@ export const DataElement = ({ element }: { element: ZeroXElement }) => {
         {optionKey}
       </Box>
       <Box sx={{ padding: theme.spacing(0.3, 0.3) }}>
-        {option.key === "lastBlock" && <LastBlock />}
+        {option.key === "lastBlock" ? <LastBlock /> : value}
       </Box>
     </Box>
   );

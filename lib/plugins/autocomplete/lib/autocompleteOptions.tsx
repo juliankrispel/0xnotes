@@ -73,6 +73,6 @@ export const autocompleteOptions: AutocompleteOption[] = [
   {
     modifier: "/",
     key: "lastBlock",
-    description: "Get last block on ethereum",
+    description: "Inspect the last block on ethereum",
   },
 ];
