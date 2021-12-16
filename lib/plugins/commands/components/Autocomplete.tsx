@@ -2,7 +2,7 @@ import { useSlateStatic } from "slate-react"
 import { useTextSelection } from 'use-text-selection'
 import { autocompleteCommand } from "../lib/autocompleteCommand"
 import { OptionsList } from "./OptionsList"
-import { autocompleteOptions } from "../lib/autocompleteOptions"
+import { commands } from "../lib/commands"
 
 
 export const Autocomplete = () => {
@@ -16,11 +16,11 @@ export const Autocomplete = () => {
 
   const search = p.search.toLowerCase()
 
-  const filteredOptions = autocompleteOptions.filter(
+  const filteredOptions = commands.filter(
     (v) =>
       p.modifier === v.modifier &&
       (v.description.toLowerCase().includes(search) || v.key.toLowerCase().includes(search))
   );
 
-  return <OptionsList modifier={p.modifier} options={filteredOptions} clientRect={clientRect} search={p.search} />
+  return <OptionsList modifier={p.modifier} commands={filteredOptions} clientRect={clientRect} search={p.search} />
 }

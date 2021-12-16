@@ -3,13 +3,12 @@ import { useState, useEffect } from "react";
 import { useSelected } from "slate-react";
 import { ZeroXElement } from "../../../types";
 import { metamaskProvider } from "../../../util/metamaskProvider";
-import { LastBlock } from './LastBlock'
-import { autocompleteOptions } from "../lib/autocompleteOptions";
+import { commands } from "../lib/commands";
 
 export const DataElement = ({ element }: { element: ZeroXElement }) => {
   const optionKey = element.option.key;
   const [value, setState] = useState<any>();
-  const option = autocompleteOptions.find((v) => v.key === optionKey);
+  const option = commands.find((v) => v.key === optionKey);
   const selected = useSelected()
   const theme = useTheme();
 
@@ -19,12 +18,15 @@ export const DataElement = ({ element }: { element: ZeroXElement }) => {
       return ;
     } else if (option.request != null) {
       const run = () => {
-        option.request().then((val) => {
-          console.log('what', val)
-          setState(val);
-        }).catch(err => {
-          console.log(err)
-        });
+        option
+          .request({ search: element.search })
+          .then((val) => {
+            console.log("what", val);
+            setState(val);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       };
       const i = setInterval(run, 5000);
       run();
@@ -39,7 +41,7 @@ export const DataElement = ({ element }: { element: ZeroXElement }) => {
       sx={{
         display: "inline-flex",
         background: theme.palette.action.disabledBackground,
-        padding: theme.spacing(.5, 1),
+        maxWidth: `${theme.spacing(70)}`,
         border: `1px solid ${
           selected ? theme.palette.text.secondary : "transparent"
         }`,
@@ -56,6 +58,8 @@ export const DataElement = ({ element }: { element: ZeroXElement }) => {
       sx={{
         display: option?.modifier === "/" ? "block" : "inline-flex",
         background: theme.palette.action.disabledBackground,
+        maxWidth: `${theme.spacing(70)}`,
+        margin: "auto",
         padding: theme.spacing(0.5, 1),
         border: `1px solid ${
           selected ? theme.palette.text.secondary : "transparent"
@@ -73,7 +77,7 @@ export const DataElement = ({ element }: { element: ZeroXElement }) => {
         {optionKey}
       </Box>
       <Box sx={{ padding: theme.spacing(0.3, 0.3) }}>
-        {option.key === "lastBlock" ? <LastBlock /> : value}
+        {value}
       </Box>
     </Box>
   );

@@ -2,12 +2,18 @@ import { BaseEditor, BaseElement, BaseText } from "slate";
 import { HistoryEditor } from "slate-history";
 import { BaseProvider } from '@metamask/providers'
 import { ReactEditor } from "slate-react";
-import { AutocompleteOption } from "./types/shared";
+import { Command } from "./types/shared";
+import { TransactionResponse } from "@ethersproject/abstract-provider/src.ts";
+
+type TransactionElement = {
+  data: Omit<TransactionResponse, "wait">;
+};
 
 export type ZeroXElement = BaseElement & {
   type?: string;
   search?: string;
-  option?: AutocompleteOption;
+  option?: Command;
+  data?: Omit<TransactionResponse, "wait">;
 };
 
 export type ZeroXText = BaseText;

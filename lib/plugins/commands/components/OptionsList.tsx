@@ -4,26 +4,26 @@ import { useState } from "react";
 import { useSlateStatic } from "slate-react";
 import { useTextSelection } from "use-text-selection";
 import { ZeroXElement } from "../../../types";
-import { AutocompleteOption } from "../../../types/shared";
+import { Command } from "../../../types/shared";
 import { insertDataBlock } from "../lib/insertDataBlock";
 import { insertDataPill } from "../lib/insertDataPill";
 
 type ClientRect = NonNullable<ReturnType<typeof useTextSelection>["clientRect"]>
 
 export function OptionsList({
-  options,
+  commands,
   clientRect,
   search,
   modifier,
 }: {
-  options: AutocompleteOption[];
+  commands: Command[];
   clientRect: ClientRect;
-  search: string;
+  search?: string;
   modifier: string;
 }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const editor = useSlateStatic()
-  const lastIndex = options.length - 1;
+  const lastIndex = commands.length - 1;
 
   useEventListener(
     "keydown",
@@ -45,7 +45,7 @@ export function OptionsList({
       } else if (e.key === "ArrowUp" && selectedIndex <= 0) {
         setSelectedIndex(lastIndex);
       } else if (e.key === "Enter") {
-        const option = options[selectedIndex];
+        const option = commands[selectedIndex];
         const element: ZeroXElement = {
           type: modifier,
           search,
@@ -82,7 +82,7 @@ export function OptionsList({
         borderTopLeftRadius: 0,
       }}
     >
-      {options.map((op, index) => (
+      {commands.map((op, index) => (
         <ListItem
           key={op.key}
           tabIndex={0}

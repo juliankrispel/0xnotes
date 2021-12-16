@@ -9,10 +9,12 @@ import { composeSlateProps } from "../util/composeSlateProps";
 import { EditableProps } from "slate-react/dist/components/editable";
 import { useLocalStorage } from 'react-use';
 import { SlateProps } from "../types/shared";
-import { autocompletePlugin } from "../plugins/autocomplete/autocomplete";
+import { commandsPlugin } from "../plugins/commands/commandsPlugin";
 import { Box, useTheme } from "@mui/material";
 import { core } from "../plugins/core/core";
 import { ZeroXEditor } from "../types";
+import { onPaste } from "../plugins/onPaste/onPaste";
+import { transaction } from "../plugins/transaction/transaction";
 
 export function ZeroXNotes()  {
   const editor = useMemo<ZeroXEditor>(
@@ -56,11 +58,15 @@ export function ZeroXNotes()  {
 
   const { editableProps, Outside } = useMemo(
     () =>
-      composeSlateProps<SlateProps>([core, autocompletePlugin], editor, {
-        editableProps: {},
-        // eslint-disable-next-line react/display-name
-        Outside: React.memo(() => <div>Not implemented</div>),
-      }),
+      composeSlateProps<SlateProps>(
+        [core, commandsPlugin, onPaste, transaction],
+        editor,
+        {
+          editableProps: {},
+          // eslint-disable-next-line react/display-name
+          Outside: React.memo(() => <div>Not implemented</div>),
+        }
+      ),
     []
   );
 

@@ -1,11 +1,12 @@
+import { Editor } from "slate";
 import { ReactEditor } from "slate-react";
 import { ZeroXEditor } from "../types";
 
-export type SlateComposable<T>  = (props: T, editor: ReactEditor) => T
+export type SlateComposable<T> = (props: T, editor: Editor) => T;
 
 export const composeSlateProps = <T extends unknown> (
   composables: SlateComposable<T>[],
-  editor: ZeroXEditor,
+  editor: Editor,
   initialProps: T
 ): T => {
   let props = initialProps

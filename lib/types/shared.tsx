@@ -5,7 +5,7 @@ export type SlateProps = {
   Outside: React.MemoExoticComponent<() => JSX.Element>
 }
 
-export type AutocompleteOption = {
+export type Command = {
   modifier: "@" | "/";
   key: string;
   description: string;

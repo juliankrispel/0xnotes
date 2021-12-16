@@ -6,11 +6,11 @@ import { onKeyPress } from "./lib/onKeyPress";
 import { ZeroXEditor } from "../../types";
 
 export const core: SlateComposable<SlateProps> = (pluginProps, editor: ZeroXEditor) =>  {
-  const { normalizeNode } = editor
+  const { isVoid } = editor;
 
-  editor.normalizeNode = (entry) => {
-    return normalizeNode(entry)
-  }
+  editor.isVoid = (props) => {
+    return typeof props.type !== "undefined" || isVoid(props);
+  };
 
   return {
     ...pluginProps,
@@ -28,7 +28,7 @@ export const core: SlateComposable<SlateProps> = (pluginProps, editor: ZeroXEdit
               variant="body1"
               style={{
                 maxWidth: `${theme.spacing(70)}`,
-                margin: 'auto',
+                margin: "auto",
                 lineHeight: theme.typography.subtitle1.lineHeight,
               }}
               {...props.attributes}
