@@ -5,12 +5,14 @@ export function insertDataBlock(
   editor: Editor,
   element: Element,
   query: string,
+  removeQuery?: boolean
 ) {
-  // TODO: fix this later
-  // Transforms.delete(editor, {
-  //   reverse: true,
-  //   distance: query.length + 1,
-  // });
+  if (removeQuery) {
+    Transforms.delete(editor, {
+      reverse: true,
+      distance: query.length + 1,
+    });
+  }
 
   Transforms.splitNodes(editor)
   Transforms.insertNodes(editor, [{ ...element }], { select: true });

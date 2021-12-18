@@ -5,7 +5,16 @@ export function insertDataPill(
   editor: Editor,
   element: Element,
   query: string,
+  removeQuery?: boolean,
 ) {
+  if (removeQuery) {
+    Transforms.delete(editor, {
+      reverse: true,
+      distance: query.length + 1,
+    });
+  }
+
+
   Transforms.delete(editor, {
     reverse: true,
     distance: query.length + 1,

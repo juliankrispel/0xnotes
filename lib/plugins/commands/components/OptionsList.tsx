@@ -24,6 +24,7 @@ export function OptionsList({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const editor = useSlateStatic()
   const lastIndex = commands.length - 1;
+  const option = commands[selectedIndex];
 
   useEventListener(
     "keydown",
@@ -45,7 +46,6 @@ export function OptionsList({
       } else if (e.key === "ArrowUp" && selectedIndex <= 0) {
         setSelectedIndex(lastIndex);
       } else if (e.key === "Enter") {
-        const option = commands[selectedIndex];
         const element: ZeroXElement = {
           type: modifier,
           search,
@@ -57,9 +57,9 @@ export function OptionsList({
           ],
         };
         if (modifier === "/") {
-          insertDataBlock(editor, element, search);
+          insertDataBlock(editor, element, search, true);
         } else {
-          insertDataPill(editor, element, search);
+          insertDataPill(editor, element, search, true);
         }
       }
     },
@@ -87,9 +87,29 @@ export function OptionsList({
           key={op.key}
           tabIndex={0}
           role="button"
+          onMouseDown={() => {
+            const element: ZeroXElement = {
+              type: modifier,
+              search,
+              option: op,
+              children: [
+                {
+                  text: "",
+                },
+              ],
+            };
+            if (modifier === "/") {
+              insertDataBlock(editor, element, search, true);
+            } else {
+              insertDataPill(editor, element, search, true);
+            }
+          }}
           sx={{
             padding: 0,
-
+            cursor: "pointer",
+            "&:hover": {
+              background: theme.palette.action.selected,
+            },
             borderLeft: `2px solid ${theme.palette.secondary.main}`,
             background:
               index === selectedIndex

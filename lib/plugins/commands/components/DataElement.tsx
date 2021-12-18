@@ -9,13 +9,45 @@ import {
   TableRow,
   useTheme,
 } from "@mui/material";
-import { ethers } from "ethers";
 import { useState, useEffect } from "react";
 import { useSelected } from "slate-react";
 import { ZeroXElement } from "../../../types";
 import { Command } from "../../../types/shared";
 
 const DataValue = ({ value }: { value: unknown }): JSX.Element => {
+  if (Array.isArray(value)) {
+    const keys =
+      (value != null && value.length > 0 && Object.keys(value[0])) || [];
+    return (
+      <Table
+        size="small"
+        aria-label="Dense table describing object properties"
+        sx={{
+          width: "100%",
+        }}
+      >
+        <TableHead>
+          {keys.map((key, index) => (
+            <TableCell key={key}>{key}</TableCell>
+          ))}
+        </TableHead>
+
+        <TableBody>
+          {value.map((val, index) => {
+            return (
+              <TableRow key={`row-${index}`}>
+                {keys.map((k, index) => {
+                  return <TableCell key={`cell-${k}`}>{val[k]}</TableCell>;
+                })}
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    );
+
+  }
+
   if (value instanceof Date) {
     return <span>{value.toISOString()}</span>;
   }
@@ -24,7 +56,7 @@ const DataValue = ({ value }: { value: unknown }): JSX.Element => {
     return <span>{value.toString()}</span>;
   }
 
-  if (typeof value === "object") {
+  if (typeof value === "object" && value != null) {
     return (
       <Table
         size="small"
@@ -58,6 +90,7 @@ export const DataElement = ({
 }) => {
   const optionKey = element.option.key;
   const [value, setState] = useState<unknown>();
+  const [error, setError] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
   const option = commands.find((v) => v.key === optionKey);
   const selected = useSelected();
@@ -73,6 +106,9 @@ export const DataElement = ({
         option
           .request({ search: element.search })
           .then((val) => {
+            if (val == null) {
+              setError(`Request invalid for ${optionKey}, ${element.search}`);
+            }
             setState(val);
           })
           .catch((err) => {
@@ -113,8 +149,10 @@ export const DataElement = ({
     display: isInline ? "inline-flex" : "flex",
     background: theme.palette.action.disabledBackground,
     maxWidth: `${theme.spacing(110)}`,
+    overflow: 'hidden',
     minWidth: theme.spacing(5),
     margin: "auto",
+    marginBottom: theme.spacing(3),
     border: `1px solid ${
       selected ? theme.palette.text.secondary : "transparent"
     }`,
@@ -122,6 +160,23 @@ export const DataElement = ({
     borderRadius: ".5em",
     fontSize: theme.typography.body2,
   };
+
+
+  if (error != null) {
+    return (
+      <Box
+        sx={{
+          ...sx,
+          height: "100%",
+          minWidth: 100,
+          background: theme.palette.error.main,
+          padding: isInline ? theme.spacing(1, 2) : theme.spacing(2),
+        }}
+      >
+        {error}
+      </Box>
+    );
+  }
 
 
   if (isLoading) {
@@ -183,7 +238,14 @@ export const DataElement = ({
           </Box>
         </Box>
       )}
-      <DataValue value={value} />
+      <Box sx={{
+        width: '100%',
+        maxHeight: theme.spacing(40),
+        overflow: 'auto',
+        overflowX: 'auto',
+      }}>
+        <DataValue value={value} />
+      </Box>
     </Box>
   );
 };

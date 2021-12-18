@@ -17,6 +17,7 @@ import { onPaste } from "../plugins/onPaste/onPaste";
 import { transaction } from "../plugins/transaction/transaction";
 import { commands } from "../plugins/commands/lib/commands";
 import { ethCommands } from "../plugins/ethCommands/ethCommands";
+import { logEth } from "../plugins/logEth/logEth";
 
 export function ZeroXNotes()  {
   const editor = useMemo<ZeroXEditor>(
@@ -35,7 +36,7 @@ export function ZeroXNotes()  {
   const { editableProps, Outside } = useMemo(
     () =>
       composeSlateProps<SlatePluginProps>(
-        [ethCommands, transaction, core, commandsPlugin, onPaste],
+        [logEth, ethCommands, transaction, core, commandsPlugin, onPaste],
         editor,
         {
           commands: commands,
