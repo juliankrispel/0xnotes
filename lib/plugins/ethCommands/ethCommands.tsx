@@ -4,9 +4,73 @@ import { ZeroXEditor } from "../../types";
 import { metamaskSigner } from "../../util/metamaskSigner";
 import { metamaskProvider } from "../../util/metamaskProvider";
 import { ethers } from "ethers";
+import { formatEther } from "ethers/lib/utils";
 
-export const ethCommands: SlateComposable<SlatePluginProps> = (pluginProps, _editor: ZeroXEditor) =>  {
+export const ethCommands: SlateComposable<SlatePluginProps> = (
+  pluginProps,
+  _editor: ZeroXEditor
+) => {
   const commands: Command[] = [
+    {
+      modifier: "/",
+      key: "address",
+      description: "Inspect an address on ethereum",
+      request: (props) => {
+        console.log({ props });
+        if (props?.search == null) {
+          return Promise.resolve("search not defined");
+        }
+
+        const { search } = props;
+
+        return Promise.all([
+          metamaskProvider.getBalance(search),
+          metamaskProvider.getTransactionCount(search),
+          metamaskProvider.lookupAddress(search),
+        ]).then(([balance, transactionCount, lookupAddress]) => ({
+          address: search,
+          balance: formatEther(balance),
+          transactionCount,
+          lookupAddress,
+        }));
+      },
+    },
+    {
+      modifier: "/",
+      key: "block",
+      description: "Inspect a block on ethereum",
+      request: async (props) => {
+        const search =
+          parseInt(props?.search) || (await metamaskProvider.getBlockNumber());
+
+        return metamaskProvider.getBlockWithTransactions(search).then((val) => {
+          const {
+            gasLimit,
+            timestamp,
+            gasUsed,
+            hash,
+            number,
+            difficulty,
+            baseFeePerGas,
+            extraData,
+            transactions,
+          } = val;
+
+          return {
+            gasLimit,
+            timestamp: new Date(timestamp),
+            gasUsed,
+            hash,
+            number,
+            difficulty,
+            extraData,
+            baseFeePerGas,
+            numberOfTransactions: transactions.length,
+          };
+        });
+      },
+    },
+
     {
       modifier: "@",
       key: "me",
@@ -48,9 +112,8 @@ export const ethCommands: SlateComposable<SlatePluginProps> = (pluginProps, _edi
     },
   ];
 
-
   return {
     ...pluginProps,
     commands: [...(pluginProps.commands || []), ...commands],
   };
-} 
+}; 

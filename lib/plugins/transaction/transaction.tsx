@@ -7,18 +7,14 @@ export const transaction: SlateComposable<SlatePluginProps> = (
   pluginProps,
 ) => {
 
-  const commands: Command[] = [{
-    modifier: "/",
-    key: "transaction",
-    description: "Inspect a transaction on ethereum",
-    request: ({ search }) =>
-      metamaskProvider
-        .getTransaction(search)
-        .then((v) => {
-          console.log({ v, search });
-          return JSON.stringify({ ...v }, null, 2)
-        }),
-  }]
+  const commands: Command[] = [
+    {
+      modifier: "/",
+      key: "transaction",
+      description: "Inspect a transaction on ethereum",
+      request: ({ search }) => metamaskProvider.getTransaction(search),
+    },
+  ];
 
   return {
     ...pluginProps,

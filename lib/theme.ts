@@ -6,7 +6,7 @@ import { createTheme } from "@mui/material"
 export function theme(prefersDarkMode: boolean) {
   return createTheme({
     typography: {
-      fontSize: 16,
+      fontSize: 14,
     },
     palette: {
       primary: {

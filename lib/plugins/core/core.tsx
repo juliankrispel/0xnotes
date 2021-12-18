@@ -25,9 +25,10 @@ export const core: SlateComposable<SlatePluginProps> = (pluginProps, editor: Zer
         if (props.element.type == null) {
           return (
             <Typography
-              variant="body1"
+              variant="subtitle1"
               style={{
-                maxWidth: `${theme.spacing(70)}`,
+                maxWidth: `${theme.spacing(110)}`,
+                paddingBottom: `${theme.spacing(1)}`,
                 margin: "auto",
                 lineHeight: theme.typography.subtitle1.lineHeight,
               }}

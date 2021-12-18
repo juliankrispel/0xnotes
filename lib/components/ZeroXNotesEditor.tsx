@@ -24,32 +24,6 @@ export function ZeroXNotes()  {
     []
   );
 
-  // useEffect(() => {
-  //   const run = async () => {
-  //     const provider = new ethers.providers.Web3Provider(window.ethereum);
-  //     const signer = provider.getSigner()
-  //     provider.getNetwork().then(val => {
-  //       console.log(val)
-  //     })
-
-  //     // const p = new Pool()
-  //     // provider.getLogs().then(val => {
-  //     //   console.log(val)
-  //     // })
-  //     
-  //     const address = window.ethereum.selectedAddress
-  //     const _address = await signer.getAddress()
-  //     console.log({ address, _address })
-  //     if (address != null) {
-  //       const chainId = await signer.getChainId()
-  //       const balance = await provider.getBalance(address)
-  //       console.log({ balance, chainId })
-  //     }
-  //   }
-
-  //   run()
-  // }, [])
-
   const [value, setValue] = useLocalStorage<Node[]>('editor', [
     {
       children: [{
