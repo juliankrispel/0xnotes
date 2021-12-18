@@ -2,20 +2,25 @@ import { Box, useTheme } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useSelected } from "slate-react";
 import { ZeroXElement } from "../../../types";
-import { metamaskProvider } from "../../../util/metamaskProvider";
-import { commands } from "../lib/commands";
+import { Command } from "../../../types/shared";
 
-export const DataElement = ({ element }: { element: ZeroXElement }) => {
+export const DataElement = ({
+  element,
+  commands,
+}: {
+  element: ZeroXElement;
+  commands: Command[];
+}) => {
   const optionKey = element.option.key;
   const [value, setState] = useState<any>();
   const option = commands.find((v) => v.key === optionKey);
-  const selected = useSelected()
+  const selected = useSelected();
   const theme = useTheme();
 
   useEffect(() => {
     if (option == null) {
       // do nothing
-      return ;
+      return;
     } else if (option.request != null) {
       const run = () => {
         option
@@ -33,24 +38,26 @@ export const DataElement = ({ element }: { element: ZeroXElement }) => {
       return () => {
         clearInterval(i);
       };
-    } 
+    }
   }, []);
 
   if (option == null) {
-    return <Box
-      sx={{
-        display: "inline-flex",
-        background: theme.palette.action.disabledBackground,
-        maxWidth: `${theme.spacing(70)}`,
-        border: `1px solid ${
-          selected ? theme.palette.text.secondary : "transparent"
-        }`,
-        borderRadius: ".5em",
-        fontSize: theme.typography.body2,
-      }}
-    >
-      Invalid
-    </Box>
+    return (
+      <Box
+        sx={{
+          display: "inline-flex",
+          background: theme.palette.action.disabledBackground,
+          maxWidth: `${theme.spacing(70)}`,
+          border: `1px solid ${
+            selected ? theme.palette.text.secondary : "transparent"
+          }`,
+          borderRadius: ".5em",
+          fontSize: theme.typography.body2,
+        }}
+      >
+        Invalid
+      </Box>
+    );
   }
 
   return (
@@ -76,9 +83,7 @@ export const DataElement = ({ element }: { element: ZeroXElement }) => {
       >
         {optionKey}
       </Box>
-      <Box sx={{ padding: theme.spacing(0.3, 0.3) }}>
-        {value}
-      </Box>
+      <Box sx={{ padding: theme.spacing(0.3, 0.3) }}>{value}</Box>
     </Box>
   );
 };

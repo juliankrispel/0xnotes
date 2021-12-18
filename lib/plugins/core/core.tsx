@@ -1,11 +1,11 @@
 import { SlateComposable } from "../../util/composeSlateProps";
-import { SlateProps } from "../../types/shared";
+import { SlatePluginProps } from "../../types/shared";
 import { Typography, useTheme } from "@mui/material";
 import { DefaultElement } from "slate-react";
 import { onKeyPress } from "./lib/onKeyPress";
 import { ZeroXEditor } from "../../types";
 
-export const core: SlateComposable<SlateProps> = (pluginProps, editor: ZeroXEditor) =>  {
+export const core: SlateComposable<SlatePluginProps> = (pluginProps, editor: ZeroXEditor) =>  {
   const { isVoid } = editor;
 
   editor.isVoid = (props) => {

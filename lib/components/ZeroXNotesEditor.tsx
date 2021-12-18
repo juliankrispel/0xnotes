@@ -8,13 +8,15 @@ import { Pool, priceToClosestTick } from "@uniswap/v3-sdk";
 import { composeSlateProps } from "../util/composeSlateProps";
 import { EditableProps } from "slate-react/dist/components/editable";
 import { useLocalStorage } from 'react-use';
-import { SlateProps } from "../types/shared";
+import { SlatePluginProps } from "../types/shared";
 import { commandsPlugin } from "../plugins/commands/commandsPlugin";
 import { Box, useTheme } from "@mui/material";
 import { core } from "../plugins/core/core";
 import { ZeroXEditor } from "../types";
 import { onPaste } from "../plugins/onPaste/onPaste";
 import { transaction } from "../plugins/transaction/transaction";
+import { commands } from "../plugins/commands/lib/commands";
+import { ethCommands } from "../plugins/ethCommands/ethCommands";
 
 export function ZeroXNotes()  {
   const editor = useMemo<ZeroXEditor>(
@@ -58,10 +60,11 @@ export function ZeroXNotes()  {
 
   const { editableProps, Outside } = useMemo(
     () =>
-      composeSlateProps<SlateProps>(
-        [core, commandsPlugin, onPaste, transaction],
+      composeSlateProps<SlatePluginProps>(
+        [ethCommands, transaction, core, commandsPlugin, onPaste],
         editor,
         {
+          commands: commands,
           editableProps: {},
           // eslint-disable-next-line react/display-name
           Outside: React.memo(() => <div>Not implemented</div>),

@@ -1,9 +1,10 @@
 import { EditableProps } from "slate-react/dist/components/editable";
 
-export type SlateProps = {
-  editableProps: EditableProps,
-  Outside: React.MemoExoticComponent<() => JSX.Element>
-}
+export type SlatePluginProps = {
+  commands: Command[];
+  editableProps: EditableProps;
+  Outside: React.MemoExoticComponent<() => JSX.Element>;
+};
 
 export type Command = {
   modifier: "@" | "/";

@@ -1,12 +1,28 @@
 import { SlateComposable } from "../../util/composeSlateProps";
-import { SlateProps } from "../../types/shared";
+import { Command, SlatePluginProps } from "../../types/shared";
 import { Box, useTheme } from "@mui/material";
+import { metamaskProvider } from "../../util/metamaskProvider";
 
-export const transaction: SlateComposable<SlateProps> = (
+export const transaction: SlateComposable<SlatePluginProps> = (
   pluginProps,
 ) => {
+
+  const commands: Command[] = [{
+    modifier: "/",
+    key: "transaction",
+    description: "Inspect a transaction on ethereum",
+    request: ({ search }) =>
+      metamaskProvider
+        .getTransaction(search)
+        .then((v) => {
+          console.log({ v, search });
+          return JSON.stringify({ ...v }, null, 2)
+        }),
+  }]
+
   return {
     ...pluginProps,
+    commands: [...(pluginProps.commands || []), ...commands],
     editableProps: {
       ...pluginProps.editableProps,
       renderElement: function RenderElement(props) {

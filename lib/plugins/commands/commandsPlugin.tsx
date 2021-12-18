@@ -1,33 +1,34 @@
 import React from "react";
 import { Autocomplete } from "./components/Autocomplete";
 import { SlateComposable } from "../../util/composeSlateProps";
-import { SlateProps } from "../../types/shared";
+import { SlatePluginProps } from "../../types/shared";
 import { DefaultElement } from "slate-react";
-import { commands } from "./lib/commands";
 import { DataElement } from "./components/DataElement";
-import { metamaskProvider } from "../../util/metamaskProvider";
 import { insertDataBlock } from "./lib/insertDataBlock";
 import { ZeroXElement } from "../../types";
-import { Editor } from "slate";
 
 const transactionRegex = /^0x([A-Fa-f0-9]{64})$/;
 const addressRegex = /^0x[a-fA-F0-9]{40}$/;
 const numberRegex = /^[0-9]+$/;
 
-export const commandsPlugin: SlateComposable<SlateProps> = (pluginProps, editor) =>  {
-  const { isInline, isVoid } = editor
+export const commandsPlugin: SlateComposable<SlatePluginProps> = (
+  pluginProps,
+  editor
+) => {
+  const { isInline } = editor;
+  const commands = pluginProps.commands || [];
 
   editor.isInline = (props) => {
     const option = commands.find((v) => {
-      return v.key === props?.option?.key
+      return v.key === props?.option?.key;
     });
-    return option?.modifier === '@' || isInline(props)
-  }
+    return option?.modifier === "@" || isInline(props);
+  };
 
   return {
     ...pluginProps,
     // eslint-disable-next-line react/display-name
-    Outside: React.memo(() => <Autocomplete />),
+    Outside: React.memo(() => <Autocomplete commands={commands} />),
     editableProps: {
       ...pluginProps.editableProps,
       renderElement: (props) => {
@@ -39,7 +40,7 @@ export const commandsPlugin: SlateComposable<SlateProps> = (pluginProps, editor)
           return (
             <div {...props.attributes}>
               <span contentEditable={false}>
-                <DataElement element={props.element} />
+                <DataElement element={props.element} commands={commands} />
               </span>
               {props.children}
             </div>
@@ -48,7 +49,7 @@ export const commandsPlugin: SlateComposable<SlateProps> = (pluginProps, editor)
           return (
             <span {...props.attributes}>
               <span contentEditable={false}>
-                <DataElement element={props.element} />
+                <DataElement element={props.element} commands={commands} />
               </span>
               {props.children}
             </span>
@@ -56,26 +57,26 @@ export const commandsPlugin: SlateComposable<SlateProps> = (pluginProps, editor)
         }
 
         if (pluginProps.editableProps.renderElement != null) {
-          return pluginProps.editableProps.renderElement(props)
+          return pluginProps.editableProps.renderElement(props);
         }
 
-        return <DefaultElement {...props} />
+        return <DefaultElement {...props} />;
       },
       onPaste: (e) => {
         const pastedText = e.clipboardData.getData("text/plain");
-        let option
+        let option;
 
         if (transactionRegex.test(pastedText)) {
-          option = commands.find(v => v.key === 'transaction');
+          option = commands.find((v) => v.key === "transaction");
         } else if (addressRegex.test(pastedText)) {
-          option = commands.find(v => v.key === 'address');
+          option = commands.find((v) => v.key === "address");
         } else if (numberRegex.test(pastedText)) {
-          option = commands.find(v => v.key === 'block');
+          option = commands.find((v) => v.key === "block");
         }
 
         if (option != null) {
           const element: ZeroXElement = {
-            type: '/',
+            type: "/",
             search: pastedText,
             option,
             children: [
@@ -86,9 +87,9 @@ export const commandsPlugin: SlateComposable<SlateProps> = (pluginProps, editor)
           };
 
           insertDataBlock(editor, element, pastedText);
-          e.preventDefault()
+          e.preventDefault();
         }
       },
-    }
-  }
-}
+    },
+  };
+};

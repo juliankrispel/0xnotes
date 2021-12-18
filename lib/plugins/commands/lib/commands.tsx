@@ -6,59 +6,9 @@ import { formatEther } from "ethers/lib/utils";
 
 export const commands: Command[] = [
   {
-    modifier: "@",
-    key: "me",
-    description: "My ens username",
-    request: async () => {
-      const address = await metamaskSigner.getAddress();
-      const res = await metamaskProvider.lookupAddress(address);
-      return res;
-    },
-  },
-  {
-    modifier: "@",
-    key: "blockNumber",
-    description: "Get current block number",
-    request: () => metamaskProvider.getBlockNumber().then((v) => v.toString()),
-  },
-  {
-    modifier: "@",
-    key: "gasPrice",
-    description: "Current gas price",
-    request: () =>
-      metamaskSigner
-        .getGasPrice()
-        .then((val) => ethers.utils.formatEther(val.toNumber())),
-  },
-  {
-    modifier: "@",
-    key: "eth.resolveName",
-    description: "Resolve name",
-    request: async (props) =>
-      props != null && metamaskSigner.resolveName(props.search),
-  },
-  {
-    modifier: "@",
-    key: "transactionCount",
-    description: "Get transaction count",
-    request: () => metamaskSigner.getTransactionCount(),
-  },
-  {
-    modifier: "/",
-    key: "transaction",
-    description: "Inspect a transaction on ethereum",
-    request: ({ search }) =>
-      metamaskProvider
-        .getTransaction(search)
-        .then((v) => {
-          console.log({ v, search });
-          return JSON.stringify({ ...v }, null, 2)
-        }),
-  },
-  {
     modifier: "/",
     key: "address",
-    description: "Inspect a transaction on ethereum",
+    description: "Inspect an address on ethereum",
     request: (props) => {
       console.log({ props });
       if (props?.search == null) {
